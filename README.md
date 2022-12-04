@@ -11,3 +11,5 @@ We will reproduce the architecture described by the article. We will train it wi
 CelebA dataset as the article we will develop and compare our results with theirs. To start, we will
 describe the method we will use with the choices we had to make. Then we will look at the results
 and discuss the differences we have with the original results and their explanation of these differences.
+
+a suivre ...
