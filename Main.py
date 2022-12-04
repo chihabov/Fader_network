@@ -52,5 +52,5 @@ X_all = tf.convert_to_tensor(DataTrain(NomImgAll,path_img))
 
 autoencoder = model.Autoencoder()
 autoencoder.compile(optimizer='adam', loss=keras.losses.MeanSquaredError())
-autoencoder.fit(X_all,X_all,epochs=10)
+autoencoder.fit(X_all,X_all,epochs=20)
 autoencoder.encoder.summary()
