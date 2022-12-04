@@ -14,7 +14,7 @@ from keras.optimizers import Adam
 import pandas as pd
 from PIL import Image
 import tensorflow_datasets as tfds
-
+import model
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import Conv2D, BatchNormalization, Flatten, Dense, UpSampling2D, Reshape
 
@@ -48,3 +48,9 @@ X_test = DataTrain(NomImgTest,path_img)
 print("X_test.shape = {}".format(X_test.shape))
 # X_all =(tf.data.Dataset.from_tensor_slices(DataTrain(NomImgAll)))
 X_all = tf.convert_to_tensor(DataTrain(NomImgAll,path_img))
+
+
+autoencoder = model.Autoencoder()
+autoencoder.compile(optimizer='adam', loss=keras.losses.MeanSquaredError())
+autoencoder.fit(X_all,X_all,epochs=10)
+autoencoder.encoder.summary()
