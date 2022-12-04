@@ -22,7 +22,7 @@ from tensorflow.keras.layers import Conv2D, BatchNormalization, Flatten, Dense, 
 path_img = "./demo/CelebA_subset/images"
 csv_path = './demo/CelebA_subset/list_attr_celeba.csv'
 
-
+"""
 class DatasetCelebA():
 
     # sur cette classe on assurent les transformations faite sur la DATA
@@ -42,6 +42,8 @@ class DatasetCelebA():
 
 
 dataset = DatasetCelebA(root=path_img, attr=csv_path)
+"""
+
 
 NomImg = np.sort(os.listdir(path_img))
 
