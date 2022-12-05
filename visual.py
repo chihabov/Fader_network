@@ -8,6 +8,7 @@ Created on Sun Dec  4 20:54:34 2022
 import matplotlib.pyplot as plt
 
 def Affichge(x):
+ """ show images of the datasets"""
     fig = plt.figure(figsize=(7, 3))
     nplot = 10
     for i in range(1, nplot):
