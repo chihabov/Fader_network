@@ -17,6 +17,7 @@ import tensorflow_datasets as tfds
 import model
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import Conv2D, BatchNormalization, Flatten, Dense, UpSampling2D, Reshape
+from data_attributes import create_attributes, switch_att
 
 
 from TraitementData import *
@@ -39,6 +40,29 @@ lenTest, lenTrain = int(len(NomImg) - (len(NomImg) * 0.8)), int(
 NomImgTrain = NomImg[:lenTrain]
 NomImgTest = NomImg[lenTrain:lenTrain + lenTest]
 NomImgAll = NomImg[:]
+
+
+attributes= create_attributes(csv_path,nbr_data)
+attr=switch_att(attributes)
+
+# recupértion de 4 attributs pour toute la data
+#  example :    img1 : [young , blond,male, attractive ]
+
+      
+
+
+
+#### separation on  batch
+batch_size = 25
+
+attr_batch = tf.convert_to_tensor([attr[idx: idx+batch_size] for idx in
+                                 range(0,len(attr), batch_size)])
+#print(attr_batch.shape)
+
+data_batch = tf.convert_to_tensor([X_all[idx: idx+batch_size] for idx in
+range(0,len(X_all), batch_size)])
+
+
 
 
 
