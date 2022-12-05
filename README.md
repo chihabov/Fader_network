@@ -14,6 +14,12 @@ describe the method we will use with the choices we had to make. Then we will lo
 and discuss the differences we have with the original results and their explanation of these differences.
 
  
-##  Dataset:  
-Get CelebA's aligned and cropped dataset at $http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html.$ All images should be extracted and moved to the data/img_align_celeba/ folder. The number of images should be 202599. List_attr_celeba.txt contains the 40 attributes associated to each image in the dataset.
-a suivre ...
+
+## Download : 
+
+-Get CelebA's aligned and cropped dataset at http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html. All images should be extracted and moved to the data/img_align_celeba/ folder. The number of images should be 202599. List_attr_celeba.csv contains the 40 attributes associated to each image in the dataset.
+
+- for the good functioning of the code, it is necessary to make sure that the Libraries tenserflow,pandas,matplotlib are installed on your machine 
+if it is not the case, please introduce the following instructions on your terminal.
+
+$sudo apt install python3-pandas
