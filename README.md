@@ -23,8 +23,11 @@ and discuss the differences we have with the original results and their explanat
 if it is not the case, please introduce the following instructions on your terminal.
 
  $ sudo apt install python3-pandas 
+ 
  $ sudo apt install pip install --upgrade tensorflow
+ 
  $ sudo apt install matplotlib
+ 
  
  - to make sure you get the right path for the data and the .csv file you have to modify the paths of *path_img = "./demo/CelebA_subset/images"*
  *csv_path = './demo/CelebA_subset/list_attr_celeba.csv'* how are in **main.py**and replace them with the paths in your machine 
