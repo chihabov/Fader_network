@@ -3,7 +3,7 @@
 """
 Created on Sun Dec  4 21:27:09 2022
 
-@author: spi-2019-39
+
 """
 from natsort import natsorted, ns
 import csv
