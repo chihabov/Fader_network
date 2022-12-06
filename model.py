@@ -57,7 +57,7 @@ class Discriminator(Model):
 class Autoencoder(Model):
   def __init__(self):
         super().__init__()
-        self.embeddings = None
+        #self.embeddings = None
   def __init__(self):
     super(Autoencoder, self).__init__()
     self.encoder = tf.keras.Sequential([
