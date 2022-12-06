@@ -23,6 +23,37 @@ import pandas as pd
 from PIL import Image
 import tensorflow_datasets as tfds
 
+
+
+
+class Discriminator(Model):
+    def __init__(self):
+        super().__init__()
+
+    def __init__(self):
+        super(Discriminator, self).__init__()
+        self.dis = tf.keras.Sequential([
+            layers.Input(shape=(256, 256, 3)),
+            layers.Conv2DTranspose(16, kernel_size=4, padding='same', strides=2),
+            layers.BatchNormalization(),
+            layers.ReLU()
+        ])
+        self.LL = tf.keras.Sequential([
+            layers.Dense(256, activation="leakyrelu"),
+            layers.Dense(512,activation="sigmoid")
+
+        ])
+
+
+
+    def call(self, x):
+        l = self.dis(x)
+        out = self.LL(l)
+        return out
+      
+      
+      
+
 class Autoencoder(Model):
   def __init__(self):
         super().__init__()
