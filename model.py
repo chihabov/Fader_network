@@ -80,15 +80,9 @@ class Autoencoder(Model):
       layers.Conv2D(512, kernel_size=4, padding='same',strides=2),      
       layers.BatchNormalization(),
       layers.LeakyReLU(0.2),
-      layers.Conv2D(512, kernel_size=4, padding='same', strides=2),     
-      layers.BatchNormalization(),
-      layers.LeakyReLU(0.2),
-      layers.Conv2D(1, kernel_size=4, padding='same')])
+      layers.Conv2D(512, kernel_size=4, padding='same', strides=2)])
 
     self.decoder = tf.keras.Sequential([
-      layers.Conv2DTranspose(1, kernel_size=4, padding='same'),
-      layers.BatchNormalization(),
-      layers.ReLU(),
       layers.Conv2DTranspose(512, kernel_size=4, strides=2,padding='same'),
       layers.BatchNormalization(),
       layers.ReLU(),
