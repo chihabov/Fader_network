@@ -7,7 +7,7 @@ Created on Sun Nov 20 21:15:05 2022
 """
 import numpy as np
 import pandas as pd
-csv_path=csv_path = '/home/spi-2019-39/Téléchargements/projetMLAA/images/list_attr_celeba.csv'
+csv_path=csv_path = '../images/list_attr_celeba.csv'
 
 def create_attributes(csv_path,nbr_data):
     attr=open(csv_path)
