@@ -62,6 +62,34 @@ attr_batch = tf.convert_to_tensor([attr[idx: idx+batch_size] for idx in
 data_batch = tf.convert_to_tensor([X_all[idx: idx+batch_size] for idx in
 range(0,len(X_all), batch_size)])
 
+#________________________#
+attr = switch_att(create_attributes(csv_path,101))
+print(attr.shape)
+#---------------------learning-------------------------------#
+
+ #on this part we collect 4 attributes then we concatenate them in order to have a matrix
+
+young_blond = tf.stack(
+    (attr[:,39], attr[:,9]), axis=1)
+male_attractive = tf.stack(
+    (attr[:,20], attr[:,2]), axis=1)
+
+young_blond_batch = [young_blond[idx: idx + batch_size] for idx in range(0,
+                                                                    len(young_blond),
+batch_size)]
+
+male_attractive_batch = [male_attractive[idx: idx + batch_size] for idx in
+                         range(0, len(male_attractive),
+batch_size)]
+
+features = tf.stack((young_blond, male_attractive),
+                       axis=2)
+true_labels = tf.reshape(tf.stack((young_blond, male_attractive),
+                          axis=1),[100,4])
+
+
+
+
 
 
 
