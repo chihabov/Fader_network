@@ -1,11 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec  4 20:48:02 2022
 
-@author: spi-2019-39
-"""
-from natsort import natsorted, ns
 import csv
 import os
 from abc import ABC
@@ -26,31 +19,38 @@ import tensorflow_datasets as tfds
 
 
 
-class Discriminator(Model):
-    def __init__(self):
-        super().__init__()
+class Discreminateur(keras.Model):
 
     def __init__(self):
-        super(Discriminator, self).__init__()
-        self.dis = tf.keras.Sequential([
-            layers.Input(shape=(256, 256, 3)),
-            layers.Conv2DTranspose(16, kernel_size=4, padding='same', strides=2),
-            layers.BatchNormalization(),
-            layers.ReLU()
-        ])
-        self.LL = tf.keras.Sequential([
-            layers.Dense(256, activation="leakyrelu"),
-            layers.Dense(512,activation="sigmoid")
+        super(Discreminateur, self).__init__()
+        self.outD = None
 
-        ])
-
+        self.discriminator = tf.keras.Sequential([
+            layers.Input(shape=(2, 2, 512)),
+            layers.Conv2DTranspose(512, kernel_size=4, strides=1,padding='same'),
+            layers.Flatten(),
+            layers.Dropout(0.3),
+            keras.layers.Dense(256, input_shape=(512,), activation=None),
+            keras.layers.Dense(4,input_shape=(512,)),
+            ])
 
 
-    def call(self, x):
-        l = self.dis(x)
-        out = self.LL(l)
-        return out
-      
+    def compile(self, disc_opti,d_loss =keras.losses.BinaryCrossentropy(from_logits=True)):
+        self.d_opti = disc_opti
+        self.Disc_loss = d_loss
+
+        self.discriminator.compile(self.d_opti,self.Disc_loss)
+    """def build(self,learning_rate=0.002,beta_1=0.5,
+                                        name='Adam'):
+           self.lr=learning_rate
+           self.b1=beta_1
+           self.name=name
+           self.discriminator.build(self.lr,self.b1,self.name)"""
+
+    def call(self, embedding):
+
+        self.outD =tf.sigmoid(self.discriminator(embedding))
+        return  self.outD
       
       
 
