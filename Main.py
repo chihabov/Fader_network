@@ -174,11 +174,10 @@ def train(data_batch, attr_batch,true_labels_b, AE, D, AE_optimizer,
             inputs = img, attr
 
 
-
-
             #D.discriminator.trainable = True
             #AE.trainable = False
-
+           
+            # Trainable variables are automatically tracked by GradientTape
             with tf.GradientTape(persistent=True) as tape:
                 decod,embedding = AE(inputs)
                 outD = D(embedding)
@@ -187,7 +186,7 @@ def train(data_batch, attr_batch,true_labels_b, AE, D, AE_optimizer,
                 #var = 1.0 - true_label
                 #model_loss = reconstruction_loss + l * D_loss(outD,var)
 
-
+            # We use GradientTape to calculate the gradients with respect to discr_loss and trainable_weights of D
             grad = tape.gradient(discr_loss,D.trainable_weights)
             AE_optimizer.apply_gradients(zip(grad,D.trainable_weights))
             #grad_1 = tape.gradient(model_loss, AE.trainable_weights)
