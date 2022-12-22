@@ -5,11 +5,15 @@ Created on Sun Nov 20 21:15:05 2022
 
 @author: cherif
 """
+
+#Import des bibliothèque
 import numpy as np
 import pandas as pd
 csv_path=csv_path = '../images/list_attr_celeba.csv'
 
+
 def create_attributes(csv_path,nbr_data):
+    """ Cette fonction récupère les attributs"""
     attr=open(csv_path)
     attr=attr.readlines()
     attributes=[]
@@ -20,7 +24,9 @@ def create_attributes(csv_path,nbr_data):
             
            attributes.append(attrib)
     return attributes
+
 def switch_att(y):
+    """ Cette fonction code les attributs en binaire """
   y_=[]
   for i in y:
     i_=[]
@@ -34,8 +40,10 @@ def switch_att(y):
         pass
     y_.append(i_)
   return np.array(y_)
-def attr_ind(x, data):
 
+
+def attr_ind(x, data):
+    """ Cette fonction recuper les indices"""
     df = pd.read_csv(csv_path)
     file = df.to_numpy()
     
