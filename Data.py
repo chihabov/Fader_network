@@ -56,4 +56,54 @@ class DatasetCelebA():
         self.val_indice =  (self.train_split + self.val_split)*len(self)
         self.test_indice = len(self)
         
+        
+    def load_all_data(self):
+        imgs = []
+        print("Starting loading")
+        for i, e in enumerate(self.dataset_path):
+
+            image = load_img(self.root+ "/" + e, target_size=(256, 256, 3))
+            image = img_to_array(image) / 255.0
+            imgs.append(image)
+            if i==2000:
+                print('\r' + f'{i}/{len(self.dataset_path)}', end ='')
+
+        return np.array(imgs)
+    
+    
+    def load_batch(self,indices):
+    
+     if not self.load:
+      x = []
+      att=[]
+      feat=[]
+      for i in indices:
+        im = self.load_image(i)
+        attri=self.switch_att1(self.create_attributes(i))
+        #fit=self.switch_att(self.switch_att1(self.create_attributes(i)))
+        att.append(attri)
+        x.append(im)
+        #feat.append(fit)
+     else:
+       x = (self.images[indices])/255.0
+       att = self.attributes[indices]
+       #feat=self.features[indices]
+     return tf.constant(x),tf.constant(att,dtype=tf.float32)#tf.constant(
+     # feat,dtype=tf.float32)
+        
+    def batch_train(self,bs, min_ind=0, max_ind=None):
+        if max_ind is None:
+             max_ind=self.train_indice
+        indices = np.random.randint(min_ind, max_ind, bs)
+
+
+        return self.load_batch(indices)
+    
+    def eval_batch(self,bs,ind_min, ind_max):
+        indices = np.arange(int(ind_min),int(ind_max))        
+        return self.load_batch(indices)
+   
+        
+    
+        
 
