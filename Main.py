@@ -101,8 +101,122 @@ print("X_test.shape = {}".format(X_test.shape))
 # X_all =(tf.data.Dataset.from_tensor_slices(DataTrain(NomImgAll)))
 X_all = tf.convert_to_tensor(DataTrain(NomImgAll,path_img))
 
-
+"""
 autoencoder = model.Autoencoder()
 autoencoder.compile(optimizer='adam', loss=keras.losses.MeanSquaredError())
 autoencoder.fit(X_all,X_all,epochs=20)
 autoencoder.encoder.summary()
+"""
+
+
+attr = switch_att(create_attributes(csv_path,101))
+print(attr.shape)
+#---------------------learning-------------------------------#
+
+batch_size = 25
+
+# attr[img,ind attr]
+#print(attr[:,39])
+
+
+
+young_blond = tf.stack(
+    (attr[:,39], attr[:,9]), axis=1)
+male_attractive = tf.stack(
+    (attr[:,20], attr[:,2]), axis=1)
+
+young_blond_batch = [young_blond[idx: idx + batch_size] for idx in range(0,
+                                                                    len(young_blond),
+batch_size)]
+
+male_attractive_batch = [male_attractive[idx: idx + batch_size] for idx in
+                         range(0, len(male_attractive),
+batch_size)]
+
+features = tf.reshape(tf.stack((young_blond, male_attractive),
+                       axis=2),[100,2,2,1])
+
+true_labels = tf.reshape(tf.stack((young_blond, male_attractive),
+                          axis=1),[100,4])
+
+
+
+data_batch = tf.convert_to_tensor([X_all[idx: idx + batch_size] for idx in
+                                   range(0, len(X_all), batch_size)])
+features_batch = tf.convert_to_tensor([features[idx: idx + batch_size] for idx in
+                                   range(0, len(features), batch_size)])
+#print("features _ batch",features_batch.shape)
+
+true_labels_b = tf.convert_to_tensor([true_labels[idx: idx + batch_size] for idx in
+                                   range(0, len(true_labels), batch_size)],dtype=tf.float32)
+
+
+
+
+
+def train(data_batch, attr_batch,true_labels_b, AE, D, AE_optimizer,
+          num_epochs=10,
+          l=0,AE_MSE=tf.keras.losses.MeanSquaredError(),
+          D_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)):
+
+    reconstruction_losses = []
+    AE_losses = []
+    D_losses = []
+    rec_inv_tradeoff = l
+
+
+    for epoch in range(num_epochs):
+
+        for i in range(data_batch.shape[0]):
+            img = data_batch[i]
+            attr = features_batch[i]
+            true_label = true_labels_b[i]
+            inputs = img, attr
+
+
+
+
+            #D.discriminator.trainable = True
+            #AE.trainable = False
+
+            with tf.GradientTape(persistent=True) as tape:
+                decod,embedding = AE(inputs)
+                outD = D(embedding)
+                discr_loss = D_loss(true_label,outD)
+                #reconstruction_loss = AE_MSE(decod, img)
+                #var = 1.0 - true_label
+                #model_loss = reconstruction_loss + l * D_loss(outD,var)
+
+
+            grad = tape.gradient(discr_loss,D.trainable_weights)
+            AE_optimizer.apply_gradients(zip(grad,D.trainable_weights))
+            #grad_1 = tape.gradient(model_loss, AE.trainable_weights)
+            #AE_optimizer.apply_gradients(zip(grad_1,AE.trainable_weights))
+
+
+        #AE_losses.append(model_loss.numpy())
+        D_losses.append(discr_loss.numpy())
+
+
+        print("epoch: {}/{} epochs loss_D {}  ".format(epoch,
+                                                               num_epochs,
+                                                        discr_loss.numpy(),
+                                                                 ))
+
+    plt.figure(figsize=[12,5])
+    plt.subplot(121)
+    plt.title('AE_loss ', fontsize=20)
+    plt.plot(D_losses)
+    plt.grid()
+
+    plt.subplot(122)
+    plt.title("D_loss", fontsize=20)
+    plt.plot(D_losses)
+    plt.grid()
+    plt.show()
+
+
+
+
+
+
