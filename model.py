@@ -16,6 +16,34 @@ import pandas as pd
 from PIL import Image
 import tensorflow_datasets as tfds
 
+
+
+
+
+
+##  Calculer les metrics 
+def metrics(gt, pred):
+  """  gt   : dataset ground truth 
+       pred : model predictions """
+  # Accuracy 
+  accuracy = tf.reduce_mean(gt == pred) 
+  return accuracy
+
+def Loss_metric(y_true, y_pred, loss = tf.nn.softmax_cross_entropy_with_logits):
+    bias,  cat  = y_true.shape[0], y_true.shape[-1]
+    loss_in = 0
+    accuracy = []
+    for i in range(0,cat,2):
+        yTrue_ = y_true[:, i:i+2]
+        yPred = y_pred[:, i : i+2]
+        loss_in += tf.reduce_sum(loss(yTrue_,yPred))/bias
+        accuracy.append(metrics(yTrue_, yPred))
+        Mean_accuracy=tf.reduce_mean(accuracy)
+    return loss_in , Mean_accuracy
+  
+  
+  
+ # create a autoencoder
 class Autoencoder(Model):
 
 
