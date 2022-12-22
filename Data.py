@@ -29,16 +29,31 @@ class DatasetCelebA():
     # (taille des images 256,256)
     # deux attributs dataset(les images) et attr()
 
-    def __init__(self, root, attr):
-        self.dataset = tfds.folder_dataset.ImageFolder(
-            root_dir=root,
-            shape=(256, 256, 3)
-        )
+    def __init__(self,root,attr,validation_split=0.25, test_split=0.25,
+                 max_data=None,load=None):
+        self.root = root
+        self.attr = attr
+        self.attributes_path=open(self.attr)
+        self.dataset_path=os.listdir(self.root)
+        self.dataset_path=natsorted(self.dataset_path, alg=ns.PATH | ns.IGNORECASE)
+        if max_data is not None:
+            self.dataset_path=self.dataset_path[0:max_data]
+            #self.attributes=self.switch_att1(self.create_attributes(max_data))
+            #self.features=self.switch_att(self.attributes)
+           #self.attr = pd.read_csv(attr)
+        self.val_split= validation_split
+        self.test_split= test_split
+        self.train_split=1-validation_split-test_split
+        self.load=load
+        if self.load:
+            self.images=self.load_all_data()
+            #print(len(self.images))
+            self.attributes=self.switch_att1(self.create_attributes(len(self.images)))
+            #print(self.attributes.shape)
+            #self.features=self.switch_att(self.attributes)
+            #print(self.features.shape)
+        self.train_indice = self.train_split*len(self)
+        self.val_indice =  (self.train_split + self.val_split)*len(self)
+        self.test_indice = len(self)
+        
 
-        self.attr = pd.read_csv(attr)
-
-    def __len__(self):
-        return len(self.dataset)
-
-
-dataset = DatasetCelebA(root=path_img, attr=csv_path)
