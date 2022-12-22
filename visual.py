@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 def Affichge(x):
  """ show images of the datasets"""
-    fig = plt.figure(figsize=(7, 3))
+    fig = plt.figure(figsize=(10,10))
     nplot = 10
     for i in range(1, nplot):
         ax = fig.add_subplot(1, nplot, i)
