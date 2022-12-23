@@ -219,3 +219,27 @@ def train(data_batch, attr_batch,true_labels_b, AE, D, AE_optimizer,
 
 
 
+AE_optimizer = tf.keras.optimizers.Adam(learning_rate=0.002,beta_1=0.5,
+                                name='Adam',weight_decay=1e-5)
+AE = model.Autoencoder()
+D = model.Discreminateur()
+
+#D.compile(AE_optimizer)
+#AE.compile(AE_optimizer)
+
+
+train(data_batch,features_batch,true_labels_b,AE,D,AE_optimizer,
+      num_epochs=100,
+          l=0.0,AE_MSE=tf.keras.losses.MeanSquaredError(),
+          D_loss=tf.keras.losses.BinaryCrossentropy(from_logits=True))
+
+img = data_batch[0]
+attr = features_batch[0]
+true_label = true_labels_b[0]
+inputs = img, attr
+decod,embedding = AE(inputs)
+
+visuelData.Affichge(decod)
+
+
+
