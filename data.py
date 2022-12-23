@@ -29,15 +29,18 @@ class DatasetCelebA():
     # (taille des images 256,256)
     # deux attributs dataset(les images) et attr()
 
-    def __init__(self,root,attr,validation_split=0.25, test_split=0.25,
-                 max_data=None,load=None):
+    def __init__(self,root,attr,validation_split=0.2, test_split=0.2,min_data=None,max_data=None,load=None):
         self.root = root
         self.attr = attr
         self.attributes_path=open(self.attr)
-        self.dataset_path=os.listdir(self.root)
-        self.dataset_path=natsorted(self.dataset_path, alg=ns.PATH | ns.IGNORECASE)
+        
+    
+        
+        self.dataset_path = sorted(glob.glob(self.root + "/*"))
+
         if max_data is not None:
-            self.dataset_path=self.dataset_path[0:max_data]
+            self.dataset_path=self.dataset_path[min_data:max_data]
+            print(len(self.dataset_path))
             #self.attributes=self.switch_att1(self.create_attributes(max_data))
             #self.features=self.switch_att(self.attributes)
            #self.attr = pd.read_csv(attr)
@@ -48,27 +51,28 @@ class DatasetCelebA():
         if self.load:
             self.images=self.load_all_data()
             #print(len(self.images))
-            self.attributes=self.switch_att1(self.create_attributes(len(self.images)))
+            self.attributes=self.switch_att1(self.create_attributes(min_data,len(self.images)))
             #print(self.attributes.shape)
             #self.features=self.switch_att(self.attributes)
             #print(self.features.shape)
         self.train_indice = self.train_split*len(self)
         self.val_indice =  (self.train_split + self.val_split)*len(self)
         self.test_indice = len(self)
-        
-        
+    
     def load_all_data(self):
-        imgs = []
-        print("Starting loading")
-        for i, e in enumerate(self.dataset_path):
+        images = []
+        print("loading all imagees")
+        for i, p in enumerate(self.dataset_path):
+          im=cv.imread(p)
+         
+          img=cv.resize(im, (256,256))
+          
 
-            image = load_img(self.root+ "/" + e, target_size=(256, 256, 3))
-            image = img_to_array(image) / 255.0
-            imgs.append(image)
-            if i==2000:
-                print('\r' + f'{i}/{len(self.dataset_path)}', end ='')
-
-        return np.array(imgs)
+          images.append(img/255.0)
+          
+          if i % 1000 == 0:
+            print('\r' + f'{i}/{len(self.dataset_path)}', end ='')
+        return np.array(images)  
     
     
     def load_batch(self,indices):
