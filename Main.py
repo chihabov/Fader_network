@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Dec  2 00:59:23 2022
 
-@author: spi-2019-39
-"""
 from natsort import natsorted, ns
 import csv
 import os
