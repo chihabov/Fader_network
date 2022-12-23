@@ -2,13 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Dec  4 20:54:34 2022
- #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
+@author: Cherif IGUI
 """
-Created on Sun Dec  4 20:54:34 2022
-
-@author: spi-2019-39
-
 from natsort import natsorted, ns
 import csv
 import os
@@ -69,19 +65,3 @@ def change_gender(model, Data, n_images=5, img_size=4, factors=[0.0, 0.2, 0.4, 0
 change_gender(AE, Data)
 
 
-
-
- 
-"""
-import matplotlib.pyplot as plt
-
-def Affichge(x):
- """ show images of the datasets"""
-    fig = plt.figure(figsize=(10,10))
-    nplot = 10
-    for i in range(1, nplot):
-        ax = fig.add_subplot(1, nplot, i)
-        ax.imshow(x[i])
-    plt.show()  
-    
-    
