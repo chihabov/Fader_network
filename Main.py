@@ -62,6 +62,68 @@ def convert_time(total_s):
 	time_s = total_s
 	return '%ih:%im:%.2fs'%(time_h,time_m,time_s)
 
+average_time_step = []
+total_steps = max_epoch*epoch_size
+AE_loss=[]
+D_loss=[]
+AE_val_Loss=[]
+D_val_loss=[]
+for epoch in range(max_epoch):
+  print(epoch)
+  start_epoch = time.time()
+  #train_progbar = Progbar(epoch_size)
+  #print("train_progbar",train_progbar)
+  #eval_progbar = Progbar(eval_size)
+  #Training
+  #print(f"Epoch {history.epoch} / {max_epoch}")
+  start_step = time.time()
+  for step in range(0, epoch_size, batch_size):
+    if step>=500:
+      l=0.0001
+    else:
+      l=0.0
+    
+    x,attr= Data.batch_train(batch_size)
+   
+
+    
+    dloss,modloss = autoencoder.train_step(autoencoder,x,attr,l)
+    
+    #train_progbar.add(batch_size, values = [dloss,modloss])
+   
+  
+  for step in range(0,eval_size,batch_size):
+
+    if step>=100:
+      l=0.0001
+    else:
+      l=0.0
+    x,att = Data.eval_batch(batch_size, Data.train_indice, Data.val_indice)
+    #features=tilles(features)
+    dis_val_loss, AE_val_loss= autoencoder.test_step(autoencoder,x,att,l)
+
+    #eval_progbar.add(batch_size, values = dic_to_tab(metrics))
+    #history.update(metrics)
+  #
+  average_time_step.append(time.time()-start_step)
+  print(f"\rEpoch %i/%i - Step %i/%i - Loss_AE :{modloss.numpy()} - loss_disc:{dloss.numpy()} - AE_val_loss:{AE_val_loss.numpy()} - dis_val_loss : %s%.3f (remaining time : %s)" 
+				%(epoch+1, max_epoch, epoch_size,epoch_size , ' '*(4-len(str(int(np.round(modloss.numpy()))))),dis_val_loss.numpy(), convert_time(
+					total_s=(total_steps - epoch*epoch_size - step) * np.mean(average_time_step))), end='')
+  # Je prefere afficher a chaque epoch
+  """if epoch % 1 == 0:
+    if epoch%5 == 0:
+      autoencoder.save_weights(f"models/fadernetwork/{epoch}/weights")"""
+  AE_loss.append(modloss.numpy())
+  D_loss.append(dloss.numpy())
+  AE_val_Loss.append(AE_val_loss.numpy())
+  D_val_loss.append(dis_val_loss.numpy()) 
+autoencoder.save("final/weights",save_format='tf')
+print("\n",AE_loss)
+print("\n",AE_val_Loss)
+print("\n",D_loss)
+print("\n",D_val_loss)
+
+
 
 
 
