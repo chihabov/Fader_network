@@ -1,7 +1,3 @@
-from natsort import natsorted, ns
-import csv
-import os
-from abc import ABC
 import keras
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -12,13 +8,11 @@ from tensorflow.keras.models import Model
 import numpy as np
 from keras import layers, models
 from tensorflow.keras.optimizers import Adam
-import pandas as pd
-from PIL import Image
-import tensorflow_datasets as tfds
+
 
   
  # create a autoencoder
-class Autoencoder(Model):
+class Autoencoder(Model, pretrained=False):
 
 
   def __init__(self,encoder, decoder, discriminator):
@@ -69,7 +63,7 @@ class Autoencoder(Model):
       layers.Conv2DTranspose(3, kernel_size=4, strides=2,padding='same')
       ])
     if pretrained:
-            model = keras.models.load_model('final/weights.h5')
+            model = keras.models.load_model('final/weights')
             self.encoder = model.encoder
             self.decoder = model.decoder
     self.discriminator= tf.keras.Sequential([
